@@ -1,0 +1,18 @@
+<mat-toolbar class="custom-header">
+    <a class="normal-link" routerLink="">
+        <span>Training Track</span>
+    </a>
+    <span class="spacer"></span>
+    <button mat-button routerLink="/gym">
+        <mat-icon>fitness_center</mat-icon>
+        Gym
+    </button>
+    <button mat-button routerLink="/running">
+        <mat-icon>directions_run</mat-icon>
+        Running
+    </button>
+</mat-toolbar>
+
+<main>
+<router-outlet></router-outlet>
+</main>
