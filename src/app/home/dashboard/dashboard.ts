@@ -59,13 +59,14 @@ interface PersonalBest {
 })
 
 export class Dashboard implements OnInit {
-  userName: string = 'Kenma';
+  userName: string = 'Diomedes';
   greeting: string = '';
 
   // Stats
   weeklyDistance: number = 24.5;
   weeklyGymSessions: number = 3;
   weeklyCalories: number = 1850;
+  bodyWeight: number = 84;
   bestPace: string = '5:12';
 
   // Weekly progress (percentage of goal)

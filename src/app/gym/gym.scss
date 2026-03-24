@@ -44,6 +44,20 @@
     min-width: 0;
   }
 }
+// Quick Actions
+.quick-actions {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  gap: 12px;
+  
+  button {
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
 
 @media (max-width: 768px) {
   .dashboard-container {

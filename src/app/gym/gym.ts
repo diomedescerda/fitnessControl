@@ -3,7 +3,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button'
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon'
+import { RouterModule } from '@angular/router';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { Exercise } from '../interfaces/exercise'
 
@@ -16,7 +19,10 @@ import { Exercise } from '../interfaces/exercise'
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatIconModule,
+    MatButtonModule,
+    RouterModule
   ],
   templateUrl: './gym.html',
   styleUrl: './gym.scss',
