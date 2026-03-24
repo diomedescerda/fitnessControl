@@ -45,10 +45,9 @@ CREATE TABLE exercises (
     description TEXT,
     category_id INTEGER REFERENCES exercise_categories(id),
     is_custom BOOLEAN DEFAULT false,
-    created_by VARCHAR(100), -- User ID or 'system'
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(name, created_by)
+    UNIQUE(name)
 );
 
 -- Exercise-muscle group junction table (many-to-many)
@@ -107,8 +106,6 @@ CREATE TABLE exercise_sets (
 CREATE TABLE running_sessions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     session_date DATE NOT NULL,
-    start_time TIME,
-    end_time TIME,
     distance DECIMAL(6,2) NOT NULL, -- in kilometers
     distance_unit VARCHAR(3) DEFAULT 'km',
     duration INTERVAL NOT NULL, -- PostgreSQL interval type

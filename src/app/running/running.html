@@ -1,1 +1,29 @@
-<p>running works!</p>
+<div class="dashboard-container">
+  <div class="input-section">
+    <div class="input-block">
+      <form class="input-training">
+        <mat-form-field>
+          <mat-label>Choose a date</mat-label>
+          <input matInput [matDatepicker]="picker">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Distance</mat-label>
+          <input matInput type="number" placeholder="(in km)">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Duration</mat-label>
+          <input matInput type="number" placeholder="eg. 00:30:00">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Leave a comment</mat-label>
+          <textarea matInput placeholder="Ex. It makes me feel..."></textarea>
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+  <div class="graph-section">
+    <app-running-graphs> </app-running-graphs>
+  </div>
+</div>
