@@ -1,0 +1,194 @@
+<div class="home-dashboard">
+  <!-- Welcome Card -->
+  <mat-card class="welcome-card">
+    <mat-card-content>
+      <h1>
+        {{ greeting }}, <strong>{{ userName }}</strong>
+        <span class="wave">👋</span>
+      </h1>
+      <p>Ready to crush your fitness goals today?</p>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>directions_run</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ weeklyDistance }} km</div>
+            <div class="stat-label">Distance this week</div>
+          </div>
+        </div>
+        <div class="progress-section">
+          <div class="progress-label">
+            <span>Weekly goal: {{ weeklyGoal }}km</span>
+            <span>{{ weeklyProgress | number:'1.0-0' }}%</span>
+          </div>
+          <mat-progress-bar mode="determinate" [value]="weeklyProgress" color="primary"></mat-progress-bar>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>fitness_center</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ weeklyGymSessions }}</div>
+            <div class="stat-label">Gym sessions</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>whatshot</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ weeklyCalories }}</div>
+            <div class="stat-label">Calories burned</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>speed</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ bestPace }} /km</div>
+            <div class="stat-label">Best pace</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Main Grid -->
+  <div class="main-grid">
+    <!-- Recent Activity -->
+    <mat-card class="activity-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>history</mat-icon>
+          Recent Activity
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list class="activity-list">
+          @for (activity of recentActivities; track activity.id) {
+            <div class="activity-item">
+              <div class="activity-header">
+                <div class="activity-type">
+                  <mat-icon [color]="getActivityColor(activity.type)">
+                    {{ getActivityIcon(activity.type) }}
+                  </mat-icon>
+                  <span>{{ activity.type === 'run' ? 'Running' : 'Gym' }}</span>
+                </div>
+                <div class="activity-date">{{ formatDate(activity.date) }}</div>
+              </div>
+              <div class="activity-detail">
+                {{ getActivityDescription(activity) }}
+              </div>
+              @if (activity.notes) {
+                <div class="activity-note">
+                  "{{ activity.notes }}"
+                </div>
+              }
+              <mat-divider></mat-divider>
+            </div>
+          }
+        </mat-list>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-button color="primary">
+          <mat-icon>history</mat-icon>
+          View All
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Charts -->
+    <mat-card class="charts-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>trending_up</mat-icon>
+          Progress Overview
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="chart-container">
+        <div class="chart-wrapper">
+          <h3>Weekly Running Distance</h3>
+          <div class="chart">
+            <canvas baseChart
+              [data]="weeklyDistanceData"
+              [options]="weeklyDistanceOptions"
+              [type]="weeklyDistanceType">
+            </canvas>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="chart-wrapper">
+          <h3>Gym Volume Trend</h3>
+          <div class="chart">
+            <canvas baseChart
+              [data]="gymVolumeData"
+              [options]="gymVolumeOptions"
+              [type]="gymVolumeType">
+            </canvas>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Personal Bests -->
+  <mat-card class="bests-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>emoji_events</mat-icon>
+        Personal Bests
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="bests-grid">
+        @for (best of personalBests; track best.category) {
+          <div class="best-item" matTooltip="{{ best.date | date:'MMM d, yyyy' }}">
+            <div class="best-icon">
+              <mat-icon>{{ best.icon }}</mat-icon>
+            </div>
+            <div class="best-info">
+              <div class="best-category">{{ best.category }}</div>
+              <div class="best-value">{{ best.value }}</div>
+              <div class="best-date">{{ best.date | date:'MMM d, yyyy' }}</div>
+            </div>
+          </div>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <button mat-raised-button color="primary" routerLink="/running">
+      <mat-icon>directions_run</mat-icon>
+      <span>Log Run</span>
+    </button>
+    <button mat-raised-button color="accent" routerLink="/gym">
+      <mat-icon>fitness_center</mat-icon>
+      <span>Log Workout</span>
+    </button>
+  </div>
+</div>

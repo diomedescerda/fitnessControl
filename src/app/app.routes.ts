@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { Home } from './home/home';
 import { Gym } from './gym/gym';
 import { Running } from './running/running';
-import { RunningGraphs } from './running/running-graphs/running-graphs';
+import { Dashboard} from './home/dashboard/dashboard';
 
 export const routes: Routes = [
     {
@@ -10,21 +10,20 @@ export const routes: Routes = [
         title: 'Training Track',
         component: Home,
         children: [
-            {
-                path: 'gym',
-                title: 'Gym Track',
-                component: Gym
-            },
-            {
-                path: 'running',
-                title: 'Running Track',
-                component: Running
-            },
-            {
-                path: 'running-graphs',
-                title: 'Running Graphs',
-                component: RunningGraphs
-            }
+          {
+            path: '',
+            component: Dashboard
+          },
+          {
+            path: 'gym',
+            title: 'Gym Track',
+            component: Gym
+          },
+          {
+            path: 'running',
+            title: 'Running Track',
+            component: Running
+          },
         ]
     }
 ];
