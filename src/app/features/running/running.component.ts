@@ -3,15 +3,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button'
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon'
+import { MatButtonModule } from '@angular/material/button'
 import { RouterModule } from '@angular/router';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { Exercise } from '../interfaces/exercise'
+import { RunningSession } from '../../shared/interfaces/running-session.interface'
+import { RunningGraphs } from '../../features/running/running-graphs/running-graphs.component';
 
 @Component({
-  selector: 'app-gym',
+  selector: 'app-running',
   providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -22,15 +23,10 @@ import { Exercise } from '../interfaces/exercise'
     MatDatepickerModule,
     MatIconModule,
     MatButtonModule,
-    RouterModule
+    RouterModule,
+    RunningGraphs
   ],
-  templateUrl: './gym.html',
-  styleUrl: './gym.scss',
+  templateUrl: './running.component.html',
+  styleUrl: './running.component.scss',
 })
-export class Gym {
-  exercises: Exercise[] = [
-    { id: 1, name: 'Bench Press', categoryId: 1, isCustom: false },
-    { id: 2, name: 'Squat', categoryId: 1, isCustom: false },
-    { id: 3, name: 'Deadlift', categoryId: 1, isCustom: false },
-  ];
-}
+export class Running {}

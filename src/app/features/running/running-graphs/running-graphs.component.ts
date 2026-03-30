@@ -6,8 +6,8 @@ import { MatButton } from '@angular/material/button';
 @Component({
   selector: 'app-running-graphs',
   imports: [MatButton, BaseChartDirective],
-  templateUrl: './running-graphs.html',
-  styleUrl: './running-graphs.scss',
+  templateUrl: './running-graphs.component.html',
+  styleUrl: './running-graphs.component.scss',
   standalone: true,
 })
 export class RunningGraphs {

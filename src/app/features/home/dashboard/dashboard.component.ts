@@ -54,8 +54,8 @@ interface PersonalBest {
     BaseChartDirective,
     RouterModule
   ],
-  templateUrl: './dashboard.html',
-  styleUrl: './dashboard.scss',
+  templateUrl: './dashboard.component.html',
+  styleUrl: './dashboard.component.scss',
 })
 
 export class Dashboard implements OnInit {
