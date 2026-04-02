@@ -1,0 +1,55 @@
+<div class="measurement-form">
+  <h2>Add Measurement</h2>
+
+  <div class="form-group">
+    <label>Weight (kg)</label>
+    <input [(ngModel)]="form.weight" type="number" placeholder="0.0" />
+  </div>
+
+  <div class="form-group">
+    <label>Notes</label>
+    <textarea [(ngModel)]="form.notes" placeholder="Any notes..."></textarea>
+  </div>
+
+  <div class="optional-section">
+    <button class="toggle-optional" (click)="showOptional = !showOptional">
+      {{ showOptional ? '− Hide measurements' : '+ Add circumferences (optional)' }}
+    </button>
+
+    @if (showOptional) {
+      <div class="optional-fields">
+        <div class="fields-grid">
+          <div class="form-group">
+            <label>Chest</label>
+            <input [(ngModel)]="form.chest" type="number" placeholder="cm" />
+          </div>
+          <div class="form-group">
+            <label>Waist</label>
+            <input [(ngModel)]="form.waist" type="number" placeholder="cm" />
+          </div>
+          <div class="form-group">
+            <label>Hips</label>
+            <input [(ngModel)]="form.hips" type="number" placeholder="cm" />
+          </div>
+          <div class="form-group">
+            <label>Bicep</label>
+            <input [(ngModel)]="form.bicep" type="number" placeholder="cm" />
+          </div>
+          <div class="form-group">
+            <label>Thigh</label>
+            <input [(ngModel)]="form.thigh" type="number" placeholder="cm" />
+          </div>
+          <div class="form-group">
+            <label>Calf</label>
+            <input [(ngModel)]="form.calf" type="number" placeholder="cm" />
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="form-actions">
+    <button class="cancel" (click)="cancel()">Cancel</button>
+    <button class="submit" (click)="submit()">Save</button>
+  </div>
+</div>

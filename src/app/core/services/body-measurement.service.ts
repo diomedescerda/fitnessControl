@@ -1,36 +1,36 @@
 import { Injectable } from '@angular/core';
-import { User } from '../../shared/interfaces/user.interface'
+import { BodyMeasurement } from '../../shared/interfaces/body-measurement.interface'
 
 @Injectable({
   providedIn: 'root',
 })
-export class UserService {
-    private readonly apiUrl = 'http://localhost:8080/api/Users';
+export class BodyMeasurementService {
+    private readonly apiUrl = 'http://localhost:8080/api/BodyMeasurements';
 
-    async getAll(): Promise<User[]> {
+    async getAll(): Promise<BodyMeasurement[]> {
       const response = await fetch(this.apiUrl);
       return response.json();
     }
 
-    async getById(id: string): Promise<User[]> {
+    async getById(id: string): Promise<BodyMeasurement[]> {
       const response = await fetch(`${this.apiUrl}/${id}`);
       return response.json();
     }
 
-    async create(user: Omit<User, 'id' | 'createdAt'>): Promise<User[]> {
+    async create(measurement: Omit<BodyMeasurement, 'id' | 'createdAt'>): Promise<BodyMeasurement> {
       const response = await fetch(this.apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
+        body: JSON.stringify(measurement)
       });
       return response.json();
     }
 
-    async update(id: string, user: Partial<User>): Promise<User> {
+    async update(id: string, measurement: Partial<BodyMeasurement>): Promise<BodyMeasurement> {
       const response = await fetch(`${this.apiUrl}/${id}`,{
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
+        body: JSON.stringify(measurement)
       });
       return response.json();
     }

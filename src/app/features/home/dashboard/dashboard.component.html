@@ -3,7 +3,7 @@
   <mat-card class="welcome-card">
     <mat-card-content>
       <h1>
-        {{ greeting }}, <strong>{{ userName }}</strong>
+        {{ greeting }}, <strong>{{ userName() }}</strong>
         <span class="wave">👋</span>
       </h1>
       <p>Ready to crush your fitness goals today?</p>
@@ -189,6 +189,10 @@
     <button mat-raised-button color="primary" routerLink="/running">
       <mat-icon>directions_run</mat-icon>
       <span>Log Run</span>
+    </button>
+    <button mat-raised-button color="primary" (click)="openForm()">
+      <mat-icon>directions_run</mat-icon>
+      <span>Add Measurement</span>
     </button>
   </div>
 </div>

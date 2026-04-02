@@ -1,6 +1,6 @@
 export interface RunningSession {
   id: number;
-  sessionDate: Date;
+  sessionDate: string;
   distance: number;
   distanceUnit: string;
   duration: string;

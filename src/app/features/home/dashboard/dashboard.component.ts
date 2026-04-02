@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from "@angular/router";
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButtonModule } from '@angular/material/button'
@@ -14,6 +14,12 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import { RouterModule } from '@angular/router';
+import { Dialog } from '@angular/cdk/dialog';
+import { BodyMeasurementFormComponent } from '../dashboard/body-measurement-form/body-measurement-form.component';
+import { UserService } from '../../../core/services/user.service'
+import { BodyMeasurementService } from '../../../core/services/body-measurement.service'
+import { User } from '../../../shared/interfaces/user.interface'
+import { BodyMeasurement } from '../../../shared/interfaces/body-measurement.interface';
 
 interface Activity {
   id: number;
@@ -59,7 +65,14 @@ interface PersonalBest {
 })
 
 export class Dashboard implements OnInit {
-  userName: string = 'Diomedes';
+  private dialog = inject(Dialog);
+
+  private bodyMeasurementService = inject(BodyMeasurementService);
+  private userService = inject(UserService);
+
+  users: User[] = [];
+
+  userName = signal('');
   greeting: string = '';
 
   // Stats
@@ -143,11 +156,26 @@ export class Dashboard implements OnInit {
 
   gymVolumeType: ChartType = 'line';
 
-  ngOnInit() {
+  async ngOnInit() {
     this.setGreeting();
     this.calculateProgress();
     this.loadRecentActivities();
     this.loadPersonalBests();
+    this.users = await this.userService.getAll();
+    this.userName.set(this.users[0]?.name ?? 'No user found');
+  }
+
+  openForm() {
+    const dialogRef = this.dialog.open(BodyMeasurementFormComponent, {
+      data: { userId: this.users[0]?.id }
+    });
+
+    dialogRef.closed.subscribe(async result => {
+      if (result) {
+        const measurement = result as Omit<BodyMeasurement, 'id' | 'createdAt'>;
+        await this.bodyMeasurementService.create(measurement);
+      }
+    });
   }
 
   setGreeting() {
