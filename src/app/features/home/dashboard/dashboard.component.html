@@ -41,7 +41,7 @@
           </div>
           <div class="stat-info">
             <div class="stat-value">{{ weeklyGymSessions }}</div>
-            <div class="stat-label">Gym sessions</div>
+            <div class="stat-label">Gym Sessions</div>
           </div>
         </div>
       </mat-card-content>
@@ -55,7 +55,7 @@
           </div>
           <div class="stat-info">
             <div class="stat-value">{{ weeklyCalories }}</div>
-            <div class="stat-label">Calories burned</div>
+            <div class="stat-label">Calories Consumed this week</div>
           </div>
         </div>
       </mat-card-content>
@@ -68,7 +68,7 @@
             <mat-icon>scale</mat-icon>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ bodyWeight }} kg</div>
+            <div class="stat-value">{{ bodyWeight() }} kg</div>
             <div class="stat-label">Body Weight</div>
           </div>
         </div>
@@ -182,15 +182,15 @@
 
   <!-- Quick Actions -->
   <div class="quick-actions">
-    <button mat-raised-button color="accent" routerLink="/gym">
+    <button mat-raised-button color="accent" (click)="openWorkoutForm()">
       <mat-icon>fitness_center</mat-icon>
       <span>Log Workout</span>
     </button>
-    <button mat-raised-button color="primary" routerLink="/running">
+    <button mat-raised-button color="primary" (click)="openRunningForm()">
       <mat-icon>directions_run</mat-icon>
       <span>Log Run</span>
     </button>
-    <button mat-raised-button color="primary" (click)="openForm()">
+    <button mat-raised-button color="primary" (click)="openMeasurementForm()">
       <mat-icon>directions_run</mat-icon>
       <span>Add Measurement</span>
     </button>

@@ -16,6 +16,8 @@ import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import { RouterModule } from '@angular/router';
 import { Dialog } from '@angular/cdk/dialog';
 import { BodyMeasurementFormComponent } from '../dashboard/body-measurement-form/body-measurement-form.component';
+import { WorkoutFormComponent } from '../dashboard/workout-form/workout-form.component';
+import { RunningFormComponent } from '../dashboard/running-form/running-form.component';
 import { UserService } from '../../../core/services/user.service'
 import { BodyMeasurementService } from '../../../core/services/body-measurement.service'
 import { User } from '../../../shared/interfaces/user.interface'
@@ -76,10 +78,11 @@ export class Dashboard implements OnInit {
   greeting: string = '';
 
   // Stats
+  lastMeasurement: BodyMeasurement | null = null;
   weeklyDistance: number = 24.5;
   weeklyGymSessions: number = 3;
   weeklyCalories: number = 1850;
-  bodyWeight: number = 84;
+  bodyWeight = signal(0);
   bestPace: string = '5:12';
 
   // Weekly progress (percentage of goal)
@@ -162,10 +165,38 @@ export class Dashboard implements OnInit {
     this.loadRecentActivities();
     this.loadPersonalBests();
     this.users = await this.userService.getAll();
-    this.userName.set(this.users[0]?.name ?? 'No user found');
+    this.userName.set(this.users[0]?.name ?? 'Not found');
+    this.lastMeasurement = await this.bodyMeasurementService.getMostRecentByUserId(this.users[0]?.id);
+    this.bodyWeight.set(this.lastMeasurement?.weight ?? -1);
   }
 
-  openForm() {
+  openWorkoutForm() {
+    const dialogRef = this.dialog.open(WorkoutFormComponent, {
+      data: { userId: this.users[0]?.id }
+    });
+
+    dialogRef.closed.subscribe(async result => {
+      if (result) {
+        const measurement = result as Omit<BodyMeasurement, 'id' | 'createdAt'>;
+        await this.bodyMeasurementService.create(measurement);
+      }
+    });
+  }
+
+  openRunningForm() {
+    const dialogRef = this.dialog.open(RunningFormComponent, {
+      data: { userId: this.users[0]?.id }
+    });
+
+    dialogRef.closed.subscribe(async result => {
+      if (result) {
+        const measurement = result as Omit<BodyMeasurement, 'id' | 'createdAt'>;
+        await this.bodyMeasurementService.create(measurement);
+      }
+    });
+  }
+
+  openMeasurementForm() {
     const dialogRef = this.dialog.open(BodyMeasurementFormComponent, {
       data: { userId: this.users[0]?.id }
     });

@@ -1,0 +1,54 @@
+<div class="template-form">
+  <h2>Add Running Session</h2>
+  <div class="form-group">
+    <label>Distance (km)</label>
+    <input [(ngModel)]="form.distance" type="number" placeholder="0.0" />
+  </div>
+
+  <div class="form-group">
+    <label>Duration</label>
+    <input [(ngModel)]="form.duration" type="number" placeholder="0.0" />
+  </div>
+
+  <div class="form-group">
+    <label>Notes</label>
+    <textarea [(ngModel)]="form.notes" placeholder="Any notes..."></textarea>
+  </div>
+
+  <div class="optional-section">
+    <button class="toggle-optional" (click)="showOptional = !showOptional">
+      {{ showOptional ? '− Hide additional info' : '+ Add additional info (optional)' }}
+    </button>
+
+    @if (showOptional) {
+      <div class="optional-fields">
+        <div class="fields-grid">
+          <div class="form-group">
+            <label>Average Heart Rate</label>
+            <input [(ngModel)]="form.avgHeartRate" type="number" placeholder="e.g. 143"/>
+          </div>
+          <div class="form-group">
+            <label>Maximum Heart Rate</label>
+            <input [(ngModel)]="form.maxHeartRate" type="number" placeholder="e.g. 180"/>
+          </div>
+          <div class="form-group">
+            <label>Calories Burned</label>
+            <input [(ngModel)]="form.caloriesBurned" type="number" placeholder="e.g. 560"/>
+          </div>
+          <div class="form-group">
+            <label>Date</label>
+            <input [(ngModel)]="form.date"
+              type="date"
+              [max]="today"/>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="form-actions">
+    <button class="cancel" (click)="cancel()">Cancel</button>
+    <button class="submit" (click)="submit()">Save</button>
+  </div>
+</div>
+

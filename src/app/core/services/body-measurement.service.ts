@@ -17,6 +17,12 @@ export class BodyMeasurementService {
       return response.json();
     }
 
+    async getMostRecentByUserId(userId: string): Promise<BodyMeasurement | null> {
+      const response = await fetch(`${this.apiUrl}/recent/${userId}`);
+      if (!response.ok) return null;
+      return response.json();
+    }
+
     async create(measurement: Omit<BodyMeasurement, 'id' | 'createdAt'>): Promise<BodyMeasurement> {
       const response = await fetch(this.apiUrl, {
         method: 'POST',

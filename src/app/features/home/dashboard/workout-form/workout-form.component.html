@@ -1,0 +1,62 @@
+<div class="template-form">
+  <h2>Add Workout Session</h2>
+
+  <div class="optional-section">
+    <button class="toggle-optional" (click)="showOptional = !showOptional">
+      {{ showOptional ? '− Hide everything' : '+ Create a new session' }}
+    </button>
+
+    @if (showOptional) {
+
+      <div class="form-group">
+        <label>Exercise</label>
+        <input [(ngModel)]="form.exercise" (focus)="showDropdown=true" (blur)="onBlur()" type="text"/>
+        @for (exerciseName of exercisesTemp(); track $index) {
+          @if (showDropdown) {
+            <div class="selectLike" (click)="autoComplete(exerciseName)"> {{ exerciseName }} </div>
+          }
+        }
+      </div>
+
+      <div class="form-group">
+        <label>Number of sets</label>
+        <select [(ngModel)]="sets">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+        </select>
+      </div>
+
+      <div class="optional-fields">
+        <div class="fields-grid">
+          @for (i of setsAux(); track $index) {
+            <div class="form-group">
+              <label>Weight</label>
+              <input [(ngModel)]="form.weight" type="number" placeholder="kg" />
+            </div>
+            <div class="form-group">
+              <label>Reps</label>
+              <input [(ngModel)]="form.reps" type="number" placeholder="e.g. 8" />
+            </div>
+          }
+          <div class="form-group">
+            <label>Date</label>
+            <input [(ngModel)]="form.date"
+              type="date"
+              [max]="today"/>
+          </div>
+          <div class="form-group">
+            <label>Notes</label>
+            <textarea [(ngModel)]="form.notes" placeholder="Any notes..."></textarea>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="form-actions">
+    <button class="cancel" (click)="cancel()">Cancel</button>
+    <button class="submit" (click)="submit()">Save</button>
+  </div>
+</div>

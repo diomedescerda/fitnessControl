@@ -3,28 +3,26 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-body-measurement-form',
+  selector: 'app-running-form',
   imports: [FormsModule],
-  templateUrl: './body-measurement-form.component.html',
+  templateUrl: './running-form.component.html',
   styleUrl: '../template-form.component.scss',
 })
-export class BodyMeasurementFormComponent {
+export class RunningFormComponent {
   data = inject(DIALOG_DATA);
   dialogRef = inject(DialogRef)
 
   today = new Date().toISOString().split('T')[0];
 
   form = {
-    weight: null,
-    chest: null,
-    waist: null,
-    hips: null,
-    bicep: null,
-    thigh: null,
-    calf: null,
+    distance: null,
+    duration: null,
+    avgHeartRate: null,
+    maxHeartRate: null,
+    caloriesBurned: null,
     notes: '',
     date: new Date().toISOString().split('T')[0]
-  }
+  };
 
   showOptional: boolean = false;
 

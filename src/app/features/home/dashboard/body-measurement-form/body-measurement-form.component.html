@@ -1,4 +1,4 @@
-<div class="measurement-form">
+<div class="template-form">
   <h2>Add Measurement</h2>
 
   <div class="form-group">
@@ -42,6 +42,12 @@
           <div class="form-group">
             <label>Calf</label>
             <input [(ngModel)]="form.calf" type="number" placeholder="cm" />
+          </div>
+          <div class="form-group">
+            <label>Date</label>
+            <input [(ngModel)]="form.date"
+              type="date"
+              [max]="today"/>
           </div>
         </div>
       </div>

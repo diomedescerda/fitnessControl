@@ -1,4 +1,4 @@
-.measurement-form {
+.template-form {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -24,6 +24,35 @@
       font-size: 14px;
       color: #555;
       font-weight: 500;
+    }
+
+    .selectLike {
+      padding: 10px 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #555;
+      font-weight: 500;
+      background: white;
+      cursor: pointer;
+    }
+
+    .selectLike:hover {
+        border-color: #6200ea;
+        color: #6200ea;
+    }
+
+    select {
+      appearance: none;
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #555;
+      font-weight: 500;
+      background: white;
+      cursor: pointer;
     }
 
     input, textarea {
