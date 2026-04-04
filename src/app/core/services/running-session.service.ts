@@ -1,36 +1,36 @@
 import { Injectable } from '@angular/core';
-import { User } from '../../shared/interfaces/user.interface'
+import { RunningSession } from '../../shared/interfaces/running-session.interface'
 
 @Injectable({
   providedIn: 'root',
 })
-export class UserService {
-  private readonly apiUrl = 'http://localhost:8080/api/Users';
+export class RunningSessionService {
+  private readonly apiUrl = 'http://localhost:8080/api/RunningSessions';
 
-  async getAll(): Promise<User[]> {
+  async getAll(): Promise<RunningSession[]> {
     const response = await fetch(this.apiUrl);
     return response.json();
   }
 
-  async getById(id: string): Promise<User[]> {
+  async getById(id: string): Promise<RunningSession> {
     const response = await fetch(`${this.apiUrl}/${id}`);
     return response.json();
   }
 
-  async create(user: Omit<User, 'id' | 'createdAt'>): Promise<User[]> {
+  async create(runningSession: Omit<RunningSession, 'id' | 'avgPace'>): Promise<RunningSession> {
     const response = await fetch(this.apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(user)
+      body: JSON.stringify(runningSession)
     });
     return response.json();
   }
 
-  async update(id: string, user: Partial<User>): Promise<User> {
-    const response = await fetch(`${this.apiUrl}/${id}`,{
+  async update(id: string, runningSession: Partial<RunningSession>): Promise<RunningSession> {
+    const response = await fetch(`${this.apiUrl}/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(user)
+      body: JSON.stringify(runningSession)
     });
     return response.json();
   }

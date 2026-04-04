@@ -20,8 +20,10 @@ import { WorkoutFormComponent } from '../dashboard/workout-form/workout-form.com
 import { RunningFormComponent } from '../dashboard/running-form/running-form.component';
 import { UserService } from '../../../core/services/user.service'
 import { BodyMeasurementService } from '../../../core/services/body-measurement.service'
+import { RunningSessionService } from '../../../core/services/running-session.service'
 import { User } from '../../../shared/interfaces/user.interface'
 import { BodyMeasurement } from '../../../shared/interfaces/body-measurement.interface';
+import { RunningSession } from '../../../shared/interfaces/running-session.interface';
 
 interface Activity {
   id: number;
@@ -70,6 +72,7 @@ export class Dashboard implements OnInit {
   private dialog = inject(Dialog);
 
   private bodyMeasurementService = inject(BodyMeasurementService);
+  private runningSessionService = inject(RunningSessionService);
   private userService = inject(UserService);
 
   users: User[] = [];
@@ -79,15 +82,15 @@ export class Dashboard implements OnInit {
 
   // Stats
   lastMeasurement: BodyMeasurement | null = null;
-  weeklyDistance: number = 24.5;
-  weeklyGymSessions: number = 3;
-  weeklyCalories: number = 1850;
+  weeklyDistance: number = -1;
+  weeklyGymSessions: number = -1;
+  weeklyCalories: number = -1;
   bodyWeight = signal(0);
   bestPace: string = '5:12';
 
   // Weekly progress (percentage of goal)
-  weeklyGoal: number = 40; // 40km goal
-  weeklyProgress: number = 0;
+  weeklyGoal: number = -1; // 40km goal
+  weeklyProgress: number = -1;
 
   // Recent activities
   recentActivities: Activity[] = [];
@@ -190,8 +193,8 @@ export class Dashboard implements OnInit {
 
     dialogRef.closed.subscribe(async result => {
       if (result) {
-        const measurement = result as Omit<BodyMeasurement, 'id' | 'createdAt'>;
-        await this.bodyMeasurementService.create(measurement);
+        const runningSession = result as Omit<RunningSession, 'id' | 'avgPace'>;
+        await this.runningSessionService.create(runningSession);
       }
     });
   }

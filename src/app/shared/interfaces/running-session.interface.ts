@@ -1,9 +1,10 @@
 export interface RunningSession {
-  id: number;
-  sessionDate: string;
+  id: string;
+  userId: string;
+  date: string;
   distance: number;
-  distanceUnit: string;
   duration: string;
+  avgPace: string;
   avgHeartRate?: number;
   maxHeartRate?: number;
   caloriesBurned?: number;
