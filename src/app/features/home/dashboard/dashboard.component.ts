@@ -82,15 +82,15 @@ export class Dashboard implements OnInit {
 
   // Stats
   lastMeasurement: BodyMeasurement | null = null;
-  weeklyDistance: number = -1;
+  weeklyDistance = signal(0);
   weeklyGymSessions: number = -1;
   weeklyCalories: number = -1;
   bodyWeight = signal(0);
   bestPace: string = '5:12';
 
   // Weekly progress (percentage of goal)
-  weeklyGoal: number = -1; // 40km goal
-  weeklyProgress: number = -1;
+  weeklyGoal: number = 20;
+  weeklyProgress: number = 0;
 
   // Recent activities
   recentActivities: Activity[] = [];
@@ -164,13 +164,14 @@ export class Dashboard implements OnInit {
 
   async ngOnInit() {
     this.setGreeting();
-    this.calculateProgress();
     this.loadRecentActivities();
     this.loadPersonalBests();
     this.users = await this.userService.getAll();
     this.userName.set(this.users[0]?.name ?? 'Not found');
     this.lastMeasurement = await this.bodyMeasurementService.getMostRecentByUserId(this.users[0]?.id);
     this.bodyWeight.set(this.lastMeasurement?.weight ?? -1);
+    this.weeklyDistance.set(await this.runningSessionService.getWeeklyDistanceByUserIdAndOffset(this.users[0]?.id, 0));
+    this.calculateProgress();
   }
 
   openWorkoutForm() {
@@ -224,7 +225,7 @@ export class Dashboard implements OnInit {
   }
 
   calculateProgress() {
-    this.weeklyProgress = (this.weeklyDistance / this.weeklyGoal) * 100;
+    this.weeklyProgress = (this.weeklyDistance() / this.weeklyGoal) * 100;
   }
 
   loadRecentActivities() {

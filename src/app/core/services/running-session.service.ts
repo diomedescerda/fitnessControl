@@ -17,6 +17,11 @@ export class RunningSessionService {
     return response.json();
   }
 
+  async getWeeklyDistanceByUserIdAndOffset(id: string, offset: number): Promise<number> {
+    const response = await fetch(`${this.apiUrl}/weeklyDistance/${id}/${offset}`);
+    return response.json();
+  }
+
   async create(runningSession: Omit<RunningSession, 'id' | 'avgPace'>): Promise<RunningSession> {
     const response = await fetch(this.apiUrl, {
       method: 'POST',
