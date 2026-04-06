@@ -75,5 +75,6 @@ export class WorkoutFormComponent {
       workoutExercises: this.exercisesForm
     };
     console.log(payload);
+    this.dialogRef.close(payload);
   }
 }
