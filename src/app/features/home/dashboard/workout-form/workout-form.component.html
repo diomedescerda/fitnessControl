@@ -11,16 +11,16 @@
       <div class="form-group">
         <label>Exercise</label>
         <input [(ngModel)]="form.exercise" (focus)="showDropdown=true" (blur)="onBlur()" type="text"/>
-        @for (exerciseName of exercisesTemp(); track $index) {
+        @for (exercise of exercisesTemp(); track $index) {
           @if (showDropdown) {
-            <div class="selectLike" (click)="autoComplete(exerciseName)"> {{ exerciseName }} </div>
+            <div class="selectLike" (click)="autoComplete(exercise)"> {{ exercise.name }} </div>
           }
         }
       </div>
 
       <div class="form-group">
         <label>Number of sets</label>
-        <select [(ngModel)]="sets">
+        <select [(ngModel)]="numberOfSets">
           <option>1</option>
           <option>2</option>
           <option>3</option>
@@ -33,11 +33,11 @@
           @for (i of setsAux(); track $index) {
             <div class="form-group">
               <label>Weight</label>
-              <input [(ngModel)]="form.weight" type="number" placeholder="kg" />
+              <input [(ngModel)]="setsFields()[$index].weight" type="number" placeholder="kg" />
             </div>
             <div class="form-group">
               <label>Reps</label>
-              <input [(ngModel)]="form.reps" type="number" placeholder="e.g. 8" />
+              <input [(ngModel)]="setsFields()[$index].reps" type="number" placeholder="e.g. 8" />
             </div>
           }
           <div class="form-group">
@@ -57,6 +57,9 @@
 
   <div class="form-actions">
     <button class="cancel" (click)="cancel()">Cancel</button>
+    @if (showOptional) {
+    <button class="submit" (click)="addExercise()">Add Exercise</button>
     <button class="submit" (click)="submit()">Save</button>
+    }
   </div>
 </div>

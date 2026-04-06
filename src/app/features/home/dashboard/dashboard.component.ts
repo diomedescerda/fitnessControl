@@ -21,9 +21,11 @@ import { RunningFormComponent } from '../dashboard/running-form/running-form.com
 import { UserService } from '../../../core/services/user.service'
 import { BodyMeasurementService } from '../../../core/services/body-measurement.service'
 import { RunningSessionService } from '../../../core/services/running-session.service'
+import { WorkoutSessionService } from '../../../core/services/workout-session.service'
 import { User } from '../../../shared/interfaces/user.interface'
 import { BodyMeasurement } from '../../../shared/interfaces/body-measurement.interface';
 import { RunningSession } from '../../../shared/interfaces/running-session.interface';
+import { WorkoutSession } from '../../../shared/interfaces/workout-session.interface';
 
 interface Activity {
   id: number;
@@ -73,6 +75,7 @@ export class Dashboard implements OnInit {
 
   private bodyMeasurementService = inject(BodyMeasurementService);
   private runningSessionService = inject(RunningSessionService);
+  private workoutSessionService = inject(WorkoutSessionService);
   private userService = inject(UserService);
 
   users: User[] = [];
@@ -181,8 +184,8 @@ export class Dashboard implements OnInit {
 
     dialogRef.closed.subscribe(async result => {
       if (result) {
-        const measurement = result as Omit<BodyMeasurement, 'id' | 'createdAt'>;
-        await this.bodyMeasurementService.create(measurement);
+        const workoutSession = result as Omit<WorkoutSession, 'id'>;
+        await this.workoutSessionService.create(workoutSession);
       }
     });
   }

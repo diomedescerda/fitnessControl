@@ -1,6 +1,8 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { FormsModule } from '@angular/forms';
+import { ExerciseService } from '../../../../core/services/exercise.service';
+import { Exercise } from '../../../../shared/interfaces/exercise.interface';
 
 @Component({
   selector: 'app-workout-form',
@@ -11,55 +13,67 @@ import { FormsModule } from '@angular/forms';
 export class WorkoutFormComponent {
   data = inject(DIALOG_DATA);
   dialogRef = inject(DialogRef)
+  private exerciseService = inject(ExerciseService);
 
-  sets = signal(1);
+  numberOfSets = signal(1);
 
-  setsAux = computed(() => Array.from({ length: this.sets() }));
+  setsAux = computed(() => Array.from({ length: this.numberOfSets() }));
 
   today = new Date().toISOString().split('T')[0];
 
-  /*
-        * Incline Barbell Bench Press: 3 Sets
-        Working Set: [6-8] Reps
-        Notes: best rep 20kg per 12
-        Track:
-            Weight: Reps:
-            Weight: Reps:
-            Weight: Reps:
- */
-
- // example
-  exercisesNames = ["Bench Press", "Squat", "Deadlift"];
-  exercisesTemp = computed(() => this.exercisesNames.filter(exe => exe.includes(this.form.exercise())).slice(0,2));
+  exercises = signal<Exercise[]>([]);
+  exercisesTemp = computed(() => this.exercises().filter(exe => exe.name.includes(this.form.exercise())).slice(0, 2));
 
   form = {
     exercise: signal(''),
-    weight: null,
-    reps: null,
     notes: '',
     date: new Date().toISOString().split('T')[0]
   }
 
+  exercisesForm: any[] = [];
+  selectedExercise: Exercise | null = null;
+  setsFields = computed(() => Array.from({ length: this.numberOfSets() }, (_, index) => ({ setNumber: index + 1, weight: null, reps: null })));
+
   showOptional: boolean = false;
   showDropdown: boolean = false
 
-  submit() {
-    this.dialogRef.close({
-      ...this.form,
-      exercise: this.form.exercise(),
-      userId: this.data.userId
-    });
+  async ngOnInit() {
+    this.exercises.set(await this.exerciseService.getAll());
   }
 
-  cancel() {
-    this.dialogRef.close();
-  }
-
-  autoComplete(name: string) {
-    this.form.exercise.set(name);
+  autoComplete(exercise: Exercise) {
+    this.form.exercise.set(exercise.name);
+    this.selectedExercise = exercise
   }
 
   onBlur() {
     setTimeout(() => this.showDropdown = false, 10);
+  }
+
+  cancel() {
+    this.dialogRef.close();
+    this.exercisesForm = [];
+  }
+
+  addExercise() {
+    this.exercisesForm.push({
+      ...this.form,
+      exerciseId: this.selectedExercise?.id,
+      orderNumber: this.exercisesForm.length + 1,
+      exerciseSets: this.setsFields()
+    });
+
+    this.form.exercise.set('');
+    this.selectedExercise = null;
+    this.numberOfSets.set(1);
+  }
+
+  submit() {
+    const payload = {
+      ...this.form,
+      userId: this.data.userId,
+      workoutExercises: this.exercisesForm
+    };
+    console.log(payload);
   }
 }
