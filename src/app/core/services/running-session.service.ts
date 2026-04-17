@@ -22,6 +22,11 @@ export class RunningSessionService {
     return response.json();
   }
 
+  async getLastRunningSessionsByUserIdAndN(id: string, n: number): Promise<RunningSession[]> {
+    const response = await fetch(`${this.apiUrl}/recent/${id}/${n}`);
+    return response.json();
+  }
+
   async create(runningSession: Omit<RunningSession, 'id' | 'avgPace'>): Promise<RunningSession> {
     const response = await fetch(this.apiUrl, {
       method: 'POST',

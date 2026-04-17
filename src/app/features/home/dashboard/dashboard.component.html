@@ -40,8 +40,8 @@
             <mat-icon>fitness_center</mat-icon>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ weeklyGymSessions }}</div>
-            <div class="stat-label">Gym Sessions</div>
+            <div class="stat-value">{{ noGymSessions() }}</div>
+            <div class="stat-label">Gym Sessions this week</div>
           </div>
         </div>
       </mat-card-content>
@@ -88,7 +88,7 @@
       </mat-card-header>
       <mat-card-content>
         <mat-list class="activity-list">
-          @for (activity of recentActivities; track activity.id) {
+          @for (activity of recentActivities(); track activity.id) {
             <div class="activity-item">
               <div class="activity-header">
                 <div class="activity-type">
@@ -112,12 +112,6 @@
           }
         </mat-list>
       </mat-card-content>
-      <mat-card-actions align="end">
-        <button mat-button color="primary">
-          <mat-icon>history</mat-icon>
-          View All
-        </button>
-      </mat-card-actions>
     </mat-card>
 
     <!-- Charts -->
@@ -130,23 +124,37 @@
       </mat-card-header>
       <mat-card-content class="chart-container">
         <div class="chart-wrapper">
-          <h3>Calories Consumed per Week</h3>
-          <div class="chart">
-            <canvas baseChart
-              [data]="weeklyDistanceData"
-              [options]="weeklyDistanceOptions"
-              [type]="weeklyDistanceType">
-            </canvas>
+          <div style="display: flex; align-items: center; gap: 2px;">
+            <h3>Body Weight per</h3>
+            <select [(ngModel)]="selectedPeriodBodyWeight">
+              <option value="day">Day</option>
+              <option value="week">Week</option>
+              <option value="month">Month</option>
+            </select>
           </div>
-        </div>
-        <mat-divider></mat-divider>
-        <div class="chart-wrapper">
-          <h3>Body Weight per Week</h3>
           <div class="chart">
             <canvas baseChart
               [data]="gymVolumeData"
               [options]="gymVolumeOptions"
               [type]="gymVolumeType">
+            </canvas>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="chart-wrapper">
+          <div style="display: flex; align-items: center; gap: 2px;">
+            <h3>Calories Consumed per</h3>
+            <select [(ngModel)]="selectedPeriodCaloriesConsumed">
+              <option value="day">Day</option>
+              <option value="week">Week</option>
+              <option value="month">Month</option>
+            </select>
+          </div>
+          <div class="chart">
+            <canvas baseChart
+              [data]="weeklyDistanceData"
+              [options]="weeklyDistanceOptions"
+              [type]="weeklyDistanceType">
             </canvas>
           </div>
         </div>

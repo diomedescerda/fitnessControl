@@ -1,5 +1,6 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from "@angular/router";
+import { FormsModule } from "@angular/forms";
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
@@ -27,17 +28,13 @@ import { BodyMeasurement } from '../../../shared/interfaces/body-measurement.int
 import { RunningSession } from '../../../shared/interfaces/running-session.interface';
 import { WorkoutSession } from '../../../shared/interfaces/workout-session.interface';
 
-interface Activity {
-  id: number;
-  type: 'run' | 'gym';
-  date: Date;
+interface RecentActivity {
+  id: string;
+  type: 'run' | 'workout';
+  date: string;
   distance?: number;
   duration?: string;
-  pace?: string;
-  exercise?: string;
-  sets?: number;
-  reps?: number;
-  weight?: number;
+  avgPace?: string;
   notes?: string;
 }
 
@@ -64,7 +61,8 @@ interface PersonalBest {
     MatTooltipModule,
     MatProgressBarModule,
     BaseChartDirective,
-    RouterModule
+    RouterModule,
+    FormsModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -86,7 +84,7 @@ export class Dashboard implements OnInit {
   // Stats
   lastMeasurement: BodyMeasurement | null = null;
   weeklyDistance = signal(0);
-  weeklyGymSessions: number = -1;
+  noGymSessions = signal(0);
   weeklyCalories: number = -1;
   bodyWeight = signal(0);
   bestPace: string = '5:12';
@@ -96,7 +94,9 @@ export class Dashboard implements OnInit {
   weeklyProgress: number = 0;
 
   // Recent activities
-  recentActivities: Activity[] = [];
+  recentRunningSessions = signal<RunningSession[]>([]);
+  recentWorkoutSessions = signal<WorkoutSession[]>([]);
+  recentActivities = signal<RecentActivity[]>([]);
 
   // Personal bests
   personalBests: PersonalBest[] = [];
@@ -107,7 +107,7 @@ export class Dashboard implements OnInit {
     datasets: [
       {
         data: [12, 15, 18, 22, 20, 25, 28, 32],
-        label: 'Distance (km)',
+        label: 'Calories (Kcal)',
         backgroundColor: '#3f51b5',
         borderRadius: 8
       }
@@ -136,7 +136,7 @@ export class Dashboard implements OnInit {
     datasets: [
       {
         data: [2500, 2800, 3100, 3400, 3600, 3800, 4000, 4200],
-        label: 'Volume (kg)',
+        label: 'Weight (kg)',
         borderColor: '#ff4081',
         backgroundColor: 'rgba(255, 64, 129, 0.1)',
         tension: 0.3,
@@ -164,17 +164,47 @@ export class Dashboard implements OnInit {
   };
 
   gymVolumeType: ChartType = 'line';
+  selectedPeriodBodyWeight: 'day' | 'week' | 'month' = 'week';
+  selectedPeriodCaloriesConsumed: 'day' | 'week' | 'month' = 'week';
 
   async ngOnInit() {
     this.setGreeting();
-    this.loadRecentActivities();
     this.loadPersonalBests();
     this.users = await this.userService.getAll();
     this.userName.set(this.users[0]?.name ?? 'Not found');
     this.lastMeasurement = await this.bodyMeasurementService.getMostRecentByUserId(this.users[0]?.id);
     this.bodyWeight.set(this.lastMeasurement?.weight ?? -1);
     this.weeklyDistance.set(await this.runningSessionService.getWeeklyDistanceByUserIdAndOffset(this.users[0]?.id, 0));
+    this.noGymSessions.set(await this.workoutSessionService.getNoGymSessionsByUserIdAndOffset(this.users[0]?.id, 0));
+    this.recentRunningSessions.set(await this.runningSessionService.getLastRunningSessionsByUserIdAndN(this.users[0]?.id, 5));
+    this.recentWorkoutSessions.set(await this.workoutSessionService.getLastWorkoutSessionsByUserIdAndN(this.users[0]?.id, 5));
+    this.loadRecentActivies();
     this.calculateProgress();
+  }
+
+  loadRecentActivies() {
+    const runningSessions = this.recentRunningSessions().map(r => ({
+      id: r.id,
+      type: 'run' as const,
+      date: r.date,
+      distance: r.distance,
+      duration: r.duration,
+      avgPace: r.avgPace,
+      notes: r.notes
+    }));
+
+    const workoutSessions = this.recentWorkoutSessions().map(w => ({
+      id: w.id,
+      type: 'workout' as const,
+      date: w.date,
+      notes: w.notes
+    }));
+
+    const combined = [...runningSessions, ...workoutSessions]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 5);
+
+    this.recentActivities.set(combined);
   }
 
   openWorkoutForm() {
@@ -231,46 +261,6 @@ export class Dashboard implements OnInit {
     this.weeklyProgress = (this.weeklyDistance() / this.weeklyGoal) * 100;
   }
 
-  loadRecentActivities() {
-    this.recentActivities = [
-      {
-        id: 1,
-        type: 'run',
-        date: new Date(),
-        distance: 5.2,
-        duration: '30:00',
-        pace: '5:46',
-        notes: 'Good morning run'
-      },
-      {
-        id: 2,
-        type: 'gym',
-        date: new Date(Date.now() - 86400000),
-        exercise: 'Bench Press',
-        sets: 3,
-        reps: 8,
-        weight: 80
-      },
-      {
-        id: 3,
-        type: 'gym',
-        date: new Date(Date.now() - 86400000),
-        exercise: 'Squat',
-        sets: 3,
-        reps: 10,
-        weight: 100
-      },
-      {
-        id: 4,
-        type: 'run',
-        date: new Date(Date.now() - 172800000),
-        distance: 7.5,
-        duration: '42:00',
-        pace: '5:36'
-      }
-    ];
-  }
-
   loadPersonalBests() {
     this.personalBests = [
       { category: 'Fastest 5km', value: '24:30', date: new Date('2024-03-10'), icon: 'directions_run' },
@@ -280,33 +270,44 @@ export class Dashboard implements OnInit {
     ];
   }
 
-  formatDate(date: Date): string {
+  formatDate(date: string): string {
+    const [year, month, day] = date.split('-').map(Number);
+    const dateObj = new Date(year, month - 1, day);
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
 
-    if (date.toDateString() === today.toDateString()) {
+    if (dateObj.toDateString() === today.toDateString()) {
       return 'Today';
-    } else if (date.toDateString() === yesterday.toDateString()) {
+    } else if (dateObj.toDateString() === yesterday.toDateString()) {
       return 'Yesterday';
     } else {
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
   }
 
-  getActivityIcon(type: 'run' | 'gym'): string {
+  formatTimeInterval(interval: string): string {
+    const withoutDecimals = interval.split('.')[0]; // "00:06:15"
+    const parts = withoutDecimals.split(':');   // ["00", "06", "15"]
+    if (parts[0] === '00') {
+      return `${parts[1]}:${parts[2]}`;         // "06:15"
+    }
+    return withoutDecimals;
+  }
+
+  getActivityIcon(type: 'run' | 'workout'): string {
     return type === 'run' ? 'directions_run' : 'fitness_center';
   }
 
-  getActivityColor(type: 'run' | 'gym'): string {
+  getActivityColor(type: 'run' | 'workout'): string {
     return type === 'run' ? 'primary' : 'accent';
   }
 
-  getActivityDescription(activity: Activity): string {
+  getActivityDescription(activity: RecentActivity): string {
     if (activity.type === 'run') {
-      return `${activity.distance}km · ${activity.duration} · ${activity.pace}/km`;
+      return `Distance: ${activity.distance}km · Time: ${this.formatTimeInterval(activity.duration!)} · Pace: ${this.formatTimeInterval(activity.avgPace!)}/km`;
     } else {
-      return `${activity.exercise} · ${activity.sets}×${activity.reps}×${activity.weight}kg`;
+      return activity.notes ?? 'Gym session';
     }
   }
 }
