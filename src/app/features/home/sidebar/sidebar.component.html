@@ -1,0 +1,33 @@
+<aside
+  class="sidebar"
+  [class.expanded]="expanded"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()">
+
+  <div class="sidebar-logo">
+    <div class="logo-icon"><mat-icon>fitness_center</mat-icon></div>
+    <span class="logo-text">MyApp</span>
+  </div>
+
+  <span class="nav-section-label">Main</span>
+  <nav>
+    <a routerLink="/" routerLinkActive="active">
+      <mat-icon>dashboard</mat-icon>
+      <span class="nav-label">Dashboard</span>
+    </a>
+    <a routerLink="/gym" routerLinkActive="active">
+      <mat-icon>bar_chart</mat-icon>
+      <span class="nav-label">Analytics</span>
+    </a>
+    <a routerLink="/running" routerLinkActive="active">
+      <mat-icon>group</mat-icon>
+      <span class="nav-label">Users</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button mat-icon-button (click)="toggle()" class="toggle-btn">
+      <mat-icon>{{ pinned() ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+    </button>
+  </div>
+</aside>

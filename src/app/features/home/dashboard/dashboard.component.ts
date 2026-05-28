@@ -1,5 +1,4 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
-import { RouterLink, RouterOutlet } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButtonModule } from '@angular/material/button'
@@ -201,8 +200,8 @@ export class Dashboard implements OnInit {
     }));
 
     const combined = [...runningSessions, ...workoutSessions]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 5);
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 5);
 
     this.recentActivities.set(combined);
   }
